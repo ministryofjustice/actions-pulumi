@@ -10,6 +10,9 @@ inputs:
   backend-url:
     description: url to login to, including relevant config profile
     required: true
+  landing-arn:
+    description: full arn of landing role to assume
+    required: true
   pulumi-passphrase:
     description: pulumi passphrase
     required: false
@@ -23,6 +26,11 @@ runs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-region: eu-west-1
+          role-to-assume: {{ inputs.landing-arn }}
     - name: Upgrade AWS CLI & add aws config
       run: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
