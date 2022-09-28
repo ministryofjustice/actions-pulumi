@@ -1,0 +1,39 @@
+name: perform pulumi action 
+description: pulumi preview and up for moj cross account deployment
+inputs:
+  stack:
+    description: the stack to perform action on
+    required: true
+  pulumi-action:
+    description: the pulumi action to perform
+    required: true
+  backend-url:
+    description: url to login to, including relevant config profile
+    required: true
+  pulumi-passphrase:
+    description: pulumi passphrase
+    required: false
+  aws-config-path:
+    description: path to the relevant aws config in the repo
+    requried: false
+runs:
+  using: composite
+  steps:
+    - name: Check out repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+    - name: Upgrade AWS CLI & add aws config
+      run: |
+        curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+        unzip awscliv2.zip
+        sudo ./aws/install --update
+        aws --version
+        mkdir ~/.aws/
+        cp {{ inputs.aws-config-path }} ~/.aws/config
+    - name: perform pulumi action
+    - uses: actions/checkout@v2
+    - uses: pulumi/actions@v3
+      with:
+        command: {{ inputs.pulumi-action }}
+        stack-name: {{ inputs.stack }}
