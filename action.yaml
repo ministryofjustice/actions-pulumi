@@ -45,3 +45,5 @@ runs:
       with:
         command: ${{ inputs.pulumi-action }}
         stack-name: ${{ inputs.stack }}
+      env:
+        PULUMI_CONFIG_PASSPHRASE: ${{ inputs.pulumi-passphrase }}
