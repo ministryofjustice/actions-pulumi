@@ -26,11 +26,11 @@ runs:
       uses: actions/checkout@v3
       with:
         fetch-depth: 1
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-region: eu-west-1
-          role-to-assume: {{ inputs.landing-arn }}
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-region: eu-west-1
+        role-to-assume: {{ inputs.landing-arn }}
     - name: Upgrade AWS CLI & add aws config
       run: |
         curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
@@ -40,8 +40,8 @@ runs:
         mkdir ~/.aws/
         cp {{ inputs.aws-config-path }} ~/.aws/config
     - name: perform pulumi action
-    - uses: actions/checkout@v2
-    - uses: pulumi/actions@v3
+      uses: actions/checkout@v2
+      uses: pulumi/actions@v3
       with:
         command: {{ inputs.pulumi-action }}
         stack-name: {{ inputs.stack }}
