@@ -40,6 +40,11 @@ runs:
         aws --version
         mkdir ~/.aws/
         cp ${{ inputs.aws-config-path }} ~/.aws/config
+        cat ~/.aws/config
+    - name: check assumed role
+      shell: bash
+      run: |
+        aws sts get-caller-identity
     - name: setup python
       uses: actions/setup-python@v2
       with:
