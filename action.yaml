@@ -39,7 +39,7 @@ runs:
         sudo ./aws/install --update
         aws --version
         mkdir ~/.aws/
-        cp $(if [ -f ${{ inputs.aws-config-path }} ];then echo "${{ ipnuts.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi) ~/.aws/config
+        cp $(if [ -f ${{ inputs.aws-config-path }} ];then echo "${{ inputs.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi) ~/.aws/config
     - name: setup python
       uses: actions/setup-python@v2
       with:
