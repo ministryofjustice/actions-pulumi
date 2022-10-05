@@ -26,9 +26,7 @@ runs:
     - name: pls
       shell: bash
       run : |
-        ls -a
-        ls -a ..
-        pwd
+        ls -a ${{ github.action_path }}
     - name: Check out repository
       uses: actions/checkout@v3
       with:
