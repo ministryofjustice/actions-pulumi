@@ -39,6 +39,9 @@ runs:
         sudo ./aws/install --update
         aws --version
         mkdir ~/.aws/
+        echo "${{ github.action_path }}"
+        echo "${{ github.action_path }}/default-aws-config"
+        if [ -f ${{ inputs.aws-config-path }} ];then echo "input is valid, apparently"; fi
         if [ -f ${{ inputs.aws-config-path }} ];then echo "${{ inputs.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi
         cp $(if [ -f ${{ inputs.aws-config-path }} ];then echo "${{ inputs.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi) ~/.aws/config
     - name: setup python
