@@ -65,14 +65,13 @@ runs:
     - name: login to pulumi backend
       shell: bash
       run: |
-        
+        pulumi login '${{ inputs.backend-url }}'
     - name: perform pulumi action
       shell: bash
       env:
         PULUMI_CONFIG_PASSPHRASE: ""
         INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
       run: |
-        pulumi login '${{ inputs.backend-url }}'
         pulumi stack select -c ${{ matrix.stack }}
         pulumi config set aws:skipCredentialsValidation true
-        pulumi ${{ inputs.pulumi-action }} --refresh
+        pulumi ${{ inputs.pulumi-action }} --refresh $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)  
