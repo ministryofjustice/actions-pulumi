@@ -1,0 +1,11 @@
+[profile github-actions@data]
+region=eu-west-1
+role_arn=arn:aws:iam::593291632749:role/DataEngineeringGitHubAction
+color=89f462
+credential_source=Environment
+
+[profile github-actions@data-engineering]
+region=eu-west-1
+role_arn=arn:aws:iam::189157455002:role/DataEngineeringGitHubAction
+color=ffcccb
+credential_source=Environment
