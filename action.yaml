@@ -23,6 +23,9 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: pls
+      shell: bash
+      run : ls -a
     - name: Check out repository
       uses: actions/checkout@v3
       with:
