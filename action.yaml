@@ -16,7 +16,7 @@ inputs:
   aws-config-path:
     description: path to the relevant aws config in the repo
     requried: true
-    default: "${{ github.action_path }}/default_aws_config"
+    default: "${{ github.action_path }}/default_aws_config.config"
   pulumi-passphrase:
     description: pulumi passphrase
     required: false
