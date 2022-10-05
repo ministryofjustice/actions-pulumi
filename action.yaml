@@ -73,6 +73,6 @@ runs:
         INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
       run: |
         pulumi login '${{ inputs.backend-url }}'
-        pulumi config set aws:skipCredentialsValidation true
         pulumi stack select -c ${{ matrix.stack }}
+        pulumi config set aws:skipCredentialsValidation true
         pulumi ${{ inputs.pulumi-action }} --refresh
