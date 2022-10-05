@@ -15,19 +15,13 @@ inputs:
     required: true
   aws-config-path:
     description: path to the relevant aws config in the repo
-    requried: true
-    default: "${{ github.action_path }}/default_aws_config.config"
+    requried: false
   pulumi-passphrase:
     description: pulumi passphrase
     required: false
 runs:
   using: composite
   steps:
-    - name: pls
-      shell: bash
-      run : |
-        ls -a ${{ github.action_path }}
-        echo "${{ inputs.aws-config-path }}"
     - name: Check out repository
       uses: actions/checkout@v3
       with:
@@ -45,7 +39,7 @@ runs:
         sudo ./aws/install --update
         aws --version
         mkdir ~/.aws/
-        cp ${{ inputs.aws-config-path }} ~/.aws/config
+        cp $(if [ -f ${{ inputs.aws-config-path }} ];then echo "${{ ipnuts.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi) ~/.aws/config
     - name: setup python
       uses: actions/setup-python@v2
       with:
