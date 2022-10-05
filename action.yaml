@@ -25,7 +25,10 @@ runs:
   steps:
     - name: pls
       shell: bash
-      run : ls -a
+      run : |
+        ls -a
+        ls -a ..
+        pwd
     - name: Check out repository
       uses: actions/checkout@v3
       with:
