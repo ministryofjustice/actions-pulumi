@@ -9,3 +9,9 @@ region=eu-west-1
 role_arn=arn:aws:iam::189157455002:role/DataEngineeringGitHubAction
 color=ffcccb
 credential_source=Environment
+
+[profile github-actions@sandbox]
+region=eu-west-1
+role_arn=arn:aws:iam::684969100054:role/DataEngineeringGitHubAction
+color=ffaaee
+credential_source=Environment
