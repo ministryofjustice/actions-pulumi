@@ -13,12 +13,16 @@ inputs:
   landing-arn:
     description: full arn of landing role to assume
     required: true
+  refresh:
+    description: y or n indicates whether the pulumi actions is ran with the refresh flag
+    required: true
   aws-config-path:
     description: path to the relevant aws config in the repo
     requried: false
   pulumi-passphrase:
     description: pulumi passphrase
     required: false
+
 runs:
   using: composite
   steps:
@@ -69,4 +73,5 @@ runs:
       run: |
         pulumi stack select -c ${{ matrix.stack }}
         pulumi config set aws:skipCredentialsValidation true
-        pulumi ${{ inputs.pulumi-action }} --refresh $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)  
+        pulumi ${{ inputs.pulumi-action }} $(if [ ${{ inputs.refresh }} == y]; then echo "--refresh"; fi) $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)
+        
