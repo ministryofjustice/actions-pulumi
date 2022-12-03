@@ -16,25 +16,16 @@ inputs:
   refresh:
     description: y or n indicates whether the pulumi actions is ran with the refresh flag
     required: true
-  aws-config-path:
-    description: path to the relevant aws config in the repo
-    requried: false
   pulumi-passphrase:
     description: pulumi passphrase
+    required: true
+  aws-config-path:
+    description: path to the relevant aws config in the repo
     required: false
 
 runs:
   using: composite
   steps:
-    - name: Check out repository
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 1
-    - name: Configure AWS Credentials
-      uses: aws-actions/configure-aws-credentials@v1
-      with:
-        aws-region: eu-west-1
-        role-to-assume: ${{ inputs.landing-arn }}
     - name: Upgrade AWS CLI & add aws config
       shell: bash
       run: |
@@ -44,23 +35,10 @@ runs:
         aws --version
         mkdir ~/.aws/
         cp $(if [ ! -s ${{ inputs.aws-config-path }} ];then echo "${{ inputs.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi) ~/.aws/config
-    - name: setup python
-      uses: actions/setup-python@v2
-      with:
-        python-version: "3.9"
-    - name: Remove existing Pulumi installations
-      shell: bash
-      run: |
-        rm -rf $HOME/.pulumi
     - name: Install Pulumi CLI
       uses: pulumi/setup-pulumi@v2
       with:
         pulumi-version: ^3.0.0
-    - name: Install Python dependencies
-      shell: bash
-      run: |
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install --upgrade -r requirements.txt; fi
     - name: login to pulumi backend
       shell: bash
       run: |
@@ -68,10 +46,10 @@ runs:
     - name: perform pulumi action
       shell: bash
       env:
-        PULUMI_CONFIG_PASSPHRASE: ""
+        PULUMI_CONFIG_PASSPHRASE: ${{ inputs.stack }}
         INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
       run: |
-        pulumi stack select -c ${{ matrix.stack }}
+        pulumi stack select -c ${{ inputs.stack }}
         pulumi config set aws:skipCredentialsValidation true
         pulumi ${{ inputs.pulumi-action }} $(if [ ${{ inputs.refresh }} == y]; then echo "--refresh"; fi) $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)
         
