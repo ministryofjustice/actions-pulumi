@@ -22,6 +22,10 @@ inputs:
   aws-config-path:
     description: path to the relevant aws config in the repo
     required: false
+  work-dir:
+    description: 'Location of your Pulumi files. Defaults to ./'
+    required: false
+    default: ./
 
 runs:
   using: composite
@@ -49,6 +53,7 @@ runs:
         PULUMI_CONFIG_PASSPHRASE: ${{ inputs.stack }}
         INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
       run: |
+        cd ${{ inputs.work-dir }}
         pulumi stack select -c ${{ inputs.stack }}
         pulumi config set aws:skipCredentialsValidation true
         pulumi ${{ inputs.pulumi-action }} $(if [ ${{ inputs.refresh }} == y]; then echo "--refresh"; fi) $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)
