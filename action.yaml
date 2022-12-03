@@ -50,7 +50,7 @@ runs:
     - name: perform pulumi action
       shell: bash
       env:
-        PULUMI_CONFIG_PASSPHRASE: ${{ inputs.stack }}
+        PULUMI_CONFIG_PASSPHRASE: ${{ inputs.pulumi-passphrase }}
         INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
       run: |
         cd ${{ inputs.work-dir }}
