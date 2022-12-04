@@ -1,31 +1,34 @@
 name: perform pulumi action 
 description: pulumi preview and up for moj cross account deployment
 inputs:
-  stack:
-    description: the stack to perform action on
+  command:
+    description: 'Pulumi command to run, eg. up'
     required: true
-  pulumi-action:
-    description: the pulumi action to perform
+  stack-name:
+    description: 'Which stack you want to apply to, eg. dev'
     required: true
-  backend-url:
-    description: url to login to, including relevant config profile
-    required: true
-  landing-arn:
-    description: full arn of landing role to assume
-    required: true
+  work-dir:
+    description: 'Location of your Pulumi files. Defaults to ./'
+    required: false
+    default: ./
+  cloud-url:
+    description: 'A cloud URL to log in to, including profile'
+    required: false
+    default: ''
   refresh:
-    description: y or n indicates whether the pulumi actions is ran with the refresh flag
-    required: true
+    description: 'Perform a stack refresh as part of the operation'
+    required: false
+    default: 'false'
+  pulumi-version:
+    description: 'Install a specific version of the Pulumi CLI'
+    required: false
+    default: '^3'
   pulumi-passphrase:
     description: pulumi passphrase
     required: true
   aws-config-path:
     description: path to the relevant aws config in the repo
     required: false
-  work-dir:
-    description: 'Location of your Pulumi files. Defaults to ./'
-    required: false
-    default: ./
 
 runs:
   using: composite
@@ -42,11 +45,11 @@ runs:
     - name: Install Pulumi CLI
       uses: pulumi/setup-pulumi@v2
       with:
-        pulumi-version: ^3.0.0
+        pulumi-version: '${{ inputs.pulumi-version }}'
     - name: login to pulumi backend
       shell: bash
       run: |
-        pulumi login '${{ inputs.backend-url }}'
+        pulumi login '${{ inputs.cloud-url }}'
     - name: perform pulumi action
       shell: bash
       env:
@@ -54,7 +57,7 @@ runs:
         INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
       run: |
         cd ${{ inputs.work-dir }}
-        pulumi stack select -c ${{ inputs.stack }}
+        pulumi stack select -c ${{ inputs.stack-name }}
         pulumi config set aws:skipCredentialsValidation true
-        pulumi ${{ inputs.pulumi-action }} $(if [ ${{ inputs.refresh }} == y]; then echo "--refresh"; fi) $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)
+        pulumi ${{ inputs.command }} $(if [ ${{ inputs.refresh }} == true]; then echo "--refresh"; fi) $(if [ ${{ inputs.command }} = up ];then echo "--yes"; fi)
         
