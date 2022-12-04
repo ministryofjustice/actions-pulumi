@@ -1,31 +1,6 @@
 name: perform pulumi action 
 description: pulumi preview and up for moj cross account deployment
 inputs:
-  command:
-    description: 'Pulumi command to run, eg. up'
-    required: true
-  stack-name:
-    description: 'Which stack you want to apply to, eg. dev'
-    required: true
-  work-dir:
-    description: 'Location of your Pulumi files. Defaults to ./'
-    required: false
-    default: ./
-  cloud-url:
-    description: 'A cloud URL to log in to, including profile'
-    required: false
-    default: ''
-  refresh:
-    description: 'Perform a stack refresh as part of the operation'
-    required: false
-    default: 'false'
-  pulumi-version:
-    description: 'Install a specific version of the Pulumi CLI'
-    required: false
-    default: '^3'
-  pulumi-passphrase:
-    description: pulumi passphrase
-    required: true
   aws-config-path:
     description: path to the relevant aws config in the repo
     required: false
@@ -42,22 +17,3 @@ runs:
         aws --version
         mkdir ~/.aws/
         cp $(if [ ! -s ${{ inputs.aws-config-path }} ];then echo "${{ inputs.aws-config-path }}"; else echo "${{ github.action_path }}/default-aws-config"; fi) ~/.aws/config
-    - name: Install Pulumi CLI
-      uses: pulumi/setup-pulumi@v2
-      with:
-        pulumi-version: '${{ inputs.pulumi-version }}'
-    - name: login to pulumi backend
-      shell: bash
-      run: |
-        pulumi login '${{ inputs.cloud-url }}'
-    - name: perform pulumi action
-      shell: bash
-      env:
-        PULUMI_CONFIG_PASSPHRASE: ${{ inputs.pulumi-passphrase }}
-        INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
-      run: |
-        cd ${{ inputs.work-dir }}
-        pulumi stack select -c ${{ inputs.stack-name }}
-        pulumi config set aws:skipCredentialsValidation true
-        pulumi ${{ inputs.command }} $(if [ ${{ inputs.refresh }} == true]; then echo "--refresh"; fi) $(if [ ${{ inputs.command }} = up ];then echo "--yes"; fi)
-        
