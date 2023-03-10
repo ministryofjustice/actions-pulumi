@@ -1,17 +1,17 @@
 [profile github-actions@data]
 region=eu-west-1
-role_arn=arn:aws:iam::593291632749:role/DataEngineeringGitHubAction
+role_arn=arn:aws:iam::593291632749:role/github-actions-infrastructure
 color=89f462
 credential_source=Environment
 
 [profile github-actions@data-engineering]
 region=eu-west-1
-role_arn=arn:aws:iam::189157455002:role/DataEngineeringGitHubAction
+role_arn=arn:aws:iam::189157455002:role/github-actions-infrastructure
 color=ffcccb
 credential_source=Environment
 
 [profile github-actions@sandbox]
 region=eu-west-1
-role_arn=arn:aws:iam::684969100054:role/DataEngineeringGitHubAction
+role_arn=arn:aws:iam::684969100054:role/github-actions-infrastructure
 color=ffaaee
 credential_source=Environment
