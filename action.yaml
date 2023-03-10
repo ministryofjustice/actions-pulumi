@@ -69,9 +69,9 @@ runs:
       shell: bash
       env:
         PULUMI_CONFIG_PASSPHRASE: ""
-        INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
+        INFRA_CREATOR_ROLE_NAME: "github-actions-infrastructure"
       run: |
         pulumi stack select -c ${{ matrix.stack }}
         pulumi config set aws:skipCredentialsValidation true
-        pulumi ${{ inputs.pulumi-action }} $(if [ ${{ inputs.refresh }} == y]; then echo "--refresh"; fi) $(if [ ${{ inputs.pulumi-action }} = up ];then echo "--yes"; fi)
+        pulumi ${{ inputs.pulumi-action }} $(if [ ${{ inputs.refresh }} = y]; then echo "--refresh"; fi) $(if [ ${{ inputs.pulumi-action }} = up ] || [ ${{ inputs.pulumi-action }} = destroy ] ;then echo "--yes"; fi)
         
