@@ -69,7 +69,7 @@ runs:
       shell: bash
       env:
         PULUMI_CONFIG_PASSPHRASE: ""
-        INFRA_CREATOR_ROLE_NAME: "DataEngineeringGitHubAction"
+        INFRA_CREATOR_ROLE_NAME: "github-actions-infrastructure"
       run: |
         pulumi stack select -c ${{ matrix.stack }}
         pulumi config set aws:skipCredentialsValidation true
