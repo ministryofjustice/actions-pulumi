@@ -21,6 +21,7 @@ inputs:
     requried: false
   pulumi-passphrase:
     description: pulumi passphrase
+    default: ""
     required: false
 
 runs:
@@ -68,7 +69,7 @@ runs:
     - name: perform pulumi action
       shell: bash
       env:
-        PULUMI_CONFIG_PASSPHRASE: ""
+        PULUMI_CONFIG_PASSPHRASE: ${{ inputs.pulumi-passphrase }}
         INFRA_CREATOR_ROLE_NAME: "github-actions-infrastructure"
       run: |
         pulumi stack select -c ${{ inputs.stack }}
